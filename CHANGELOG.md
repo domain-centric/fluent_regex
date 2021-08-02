@@ -1,3 +1,2 @@
-## 0.0.1
-
-* First version
+# 0.0.1
+- https://github.com/efficientyboosters/fluent_regex/milestone/1?closed=1
