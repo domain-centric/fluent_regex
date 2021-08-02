@@ -4,6 +4,7 @@ Package that helps to construct regular expressions in a readable fashion.
 
 Regular expressions can be extremely useful in the right circumstances, but they can also be complicated to understand. Consider this regular expression for parsing email addresses based on the RFC 5322 standard:
 
+```
 (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*
   |  "(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
       |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")
@@ -13,7 +14,7 @@ Regular expressions can be extremely useful in the right circumstances, but they
           (?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]
           |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)
      \])
-
+```
 Few people can read and understand this...
 
 With FluentRegex, we can express een e-mail address as:

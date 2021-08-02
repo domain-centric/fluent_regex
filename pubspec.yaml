@@ -1,0 +1,18 @@
+name: fluent_regex
+description: Package that helps to construct regular expressions in a readable fashion.
+version: 0.0.1
+homepage: https://github.com/efficientyboosters/fluent_regex
+repository: https://github.com/efficientyboosters/fluent_regex
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  test: 1.17.10
+
+flutter:
