@@ -302,7 +302,7 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('abcbc'), true);
   FluentRegex group(FluentRegex fluentRegex,
       {GroupType type = const GroupType.noneCapturing(),
-        Quantity quantity = const Quantity.oneTime()}) {
+      Quantity quantity = const Quantity.oneTime()}) {
     _expression += '($type$fluentRegex)$quantity';
     return this;
   }
@@ -355,10 +355,10 @@ class FluentRegex implements RegExp {
   /// This is a private method because [FluentRegex] already implements [RegExp] (using this method)
   /// Returns resulting [RegExp] object
   RegExp _toRegExp() => RegExp(
-    toString(),
-    caseSensitive: !_ignoreCase,
-    multiLine: _isMultiLine,
-  );
+        toString(),
+        caseSensitive: !_ignoreCase,
+        multiLine: _isMultiLine,
+      );
 
   /// Overrides toString
   /// Returns resulting [RegExp] pattern
@@ -440,7 +440,8 @@ class FluentRegex implements RegExp {
     return results;
   }
 
-  void _appendUnNamedCapturedGroupResults(RegExpMatch match, Map<String, String?> results) {
+  void _appendUnNamedCapturedGroupResults(
+      RegExpMatch match, Map<String, String?> results) {
     int groupCount = match.groupCount;
     //group(0) is the full match, the following groups are captured groups
     if (groupCount > 0) {
@@ -450,7 +451,8 @@ class FluentRegex implements RegExp {
     }
   }
 
-  void _appendNamedCapturedGroupResults(RegExpMatch match, Map<String, String?> results) {
+  void _appendNamedCapturedGroupResults(
+      RegExpMatch match, Map<String, String?> results) {
     for (String groupName in match.groupNames) {
       results[groupName] = match.namedGroup(groupName);
     }
@@ -483,10 +485,10 @@ class FluentRegex implements RegExp {
     var name = FluentRegex()
         .characterSet(nameSet, Quantity.oneOrMoreTimes())
         .group(
-        FluentRegex()
-            .literal('.')
-            .characterSet(nameSet, Quantity.oneOrMoreTimes()),
-        quantity: Quantity.zeroOrMoreTimes());
+            FluentRegex()
+                .literal('.')
+                .characterSet(nameSet, Quantity.oneOrMoreTimes()),
+            quantity: Quantity.zeroOrMoreTimes());
     var quotedNameSet1 = CharacterSet()
         .addRange('\x01', '\x08')
         .addLiterals('\x0b\x0c')
@@ -507,22 +509,22 @@ class FluentRegex implements RegExp {
     var domainName = FluentRegex()
         .characterSet(CharacterSet().addLetters().addDigits())
         .group(
-        FluentRegex()
-            .characterSet(
-            CharacterSet().addLetters().addDigits().addLiterals('-'),
-            Quantity.zeroOrMoreTimes())
-            .characterSet(CharacterSet().addLetters().addDigits(),
-            Quantity.zeroOrOneTime())
-            .literal('.'),
-        quantity: Quantity.oneOrMoreTimes())
+            FluentRegex()
+                .characterSet(
+                    CharacterSet().addLetters().addDigits().addLiterals('-'),
+                    Quantity.zeroOrMoreTimes())
+                .characterSet(CharacterSet().addLetters().addDigits(),
+                    Quantity.zeroOrOneTime())
+                .literal('.'),
+            quantity: Quantity.oneOrMoreTimes())
         .characterSet(CharacterSet().addLetters().addDigits())
         .group(
-        FluentRegex()
-            .characterSet(
-            CharacterSet().addLetters().addDigits().addLiterals('-'),
-            Quantity.zeroOrMoreTimes())
-            .characterSet(CharacterSet().addLetters().addDigits()),
-        quantity: Quantity.zeroOrOneTime());
+            FluentRegex()
+                .characterSet(
+                    CharacterSet().addLetters().addDigits().addLiterals('-'),
+                    Quantity.zeroOrMoreTimes())
+                .characterSet(CharacterSet().addLetters().addDigits()),
+            quantity: Quantity.zeroOrOneTime());
 
     //25[0-5]
     var ipAddressByte1 = FluentRegex()
@@ -536,7 +538,7 @@ class FluentRegex implements RegExp {
     //[01]?[0-9][0-9]?
     var ipAddressByte3 = FluentRegex()
         .characterSet(
-        CharacterSet().addLiterals('01'), Quantity.zeroOrOneTime())
+            CharacterSet().addLiterals('01'), Quantity.zeroOrOneTime())
         .characterSet(CharacterSet().addDigits())
         .characterSet(CharacterSet().addDigits(), Quantity.zeroOrOneTime());
     // [a-z0-9-]*[a-z0-9]:
@@ -544,7 +546,7 @@ class FluentRegex implements RegExp {
     // |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)
     var ipAddressSuffix = FluentRegex()
         .characterSet(CharacterSet().addLetters().addDigits().addLiterals('-'),
-        Quantity.zeroOrMoreTimes())
+            Quantity.zeroOrMoreTimes())
         .characterSet(CharacterSet().addLetters().addDigits())
         .literal(':')
         .or([
@@ -565,12 +567,12 @@ class FluentRegex implements RegExp {
     var domainAddress = FluentRegex()
         .literal('[')
         .group(
-        FluentRegex().or([
-          ipAddressByte1,
-          ipAddressByte2,
-          ipAddressByte3,
-        ]).literal('.'),
-        quantity: Quantity.exactly(3))
+            FluentRegex().or([
+              ipAddressByte1,
+              ipAddressByte2,
+              ipAddressByte3,
+            ]).literal('.'),
+            quantity: Quantity.exactly(3))
         .or([
       ipAddressByte1,
       ipAddressByte2,
@@ -927,10 +929,10 @@ class Quantity {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Quantity &&
-              runtimeType == other.runtimeType &&
-              _expression == other._expression &&
-              _mode == other._mode;
+      other is Quantity &&
+          runtimeType == other.runtimeType &&
+          _expression == other._expression &&
+          _mode == other._mode;
 
   @override
   int get hashCode => _expression.hashCode ^ _mode.hashCode;

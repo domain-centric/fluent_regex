@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021. by Nils ten Hoeve. See LICENSE file in project.
+ * Copyright (c) 2021 by Nils ten Hoeve. See LICENSE file in project.
  */
 
 import 'package:fluent_regex/fluent_regex.dart';
@@ -21,7 +21,7 @@ void main() {
         });
         test('method: searchFirstLineOnly()', () {
           var regex =
-          FluentRegex().startOfLine().literal('a').searchFirstLineOnly();
+              FluentRegex().startOfLine().literal('a').searchFirstLineOnly();
           expect(regex.hasMatch('first line\na'), false);
           expect(regex.hasMatch('a'), true);
         });
@@ -311,12 +311,12 @@ void main() {
         FluentRegex()
             .startOfLine()
             .characterSet(
-            CharacterSet().addLetters().addDigits().addLiterals(".-_"),
-            Quantity.oneOrMoreTimes())
+                CharacterSet().addLetters().addDigits().addLiterals(".-_"),
+                Quantity.oneOrMoreTimes())
             .literal("@")
             .characterSet(
-            CharacterSet().addLetters().addDigits().addLiterals(".-"),
-            Quantity.oneOrMoreTimes())
+                CharacterSet().addLetters().addDigits().addLiterals(".-"),
+                Quantity.oneOrMoreTimes())
             .literal(".")
             .characterSet(CharacterSet().addLetters(), Quantity.between(2, 4))
             .endOfLine();
@@ -391,9 +391,9 @@ void main() {
           .anyCharacter(Quantity.zeroOrMoreTimes().possessive)
           .literal('foo');
       expect(
-              () => {regex.hasMatch('xfooxxxxxxfoo')},
+          () => {regex.hasMatch('xfooxxxxxxfoo')},
           throwsA((e) =>
-          e.toString() == 'FormatException: Nothing to repeat.*+foo'));
+              e.toString() == 'FormatException: Nothing to repeat.*+foo'));
     });
   });
 
@@ -413,7 +413,7 @@ void main() {
       });
       test('characterSet(CharacterSet.exclude().addDigits())', () {
         var regex =
-        FluentRegex().characterSet(CharacterSet.exclude().addDigits());
+            FluentRegex().characterSet(CharacterSet.exclude().addDigits());
         expect(regex.hasMatch('1'), false);
         expect(regex.hasMatch('a'), true);
       });
@@ -442,7 +442,7 @@ void main() {
       });
       test('characterSet(CharacterSet.exclude().addLetters())', () {
         var regex =
-        FluentRegex().characterSet(CharacterSet.exclude().addLetters());
+            FluentRegex().characterSet(CharacterSet.exclude().addLetters());
         expect(regex.hasMatch('3'), true);
         expect(regex.hasMatch('!'), true);
         expect(regex.hasMatch('a'), false);
@@ -452,22 +452,22 @@ void main() {
     group('method: addLiterals()', () {
       test("characterSet(CharacterSet().addLiterals('-'))", () {
         var regex =
-        FluentRegex().characterSet(CharacterSet().addLiterals('-_'));
+            FluentRegex().characterSet(CharacterSet().addLiterals('-_'));
         expect(regex.hasMatch('-'), true);
         expect(regex.hasMatch('_'), true);
         expect(regex.hasMatch('a'), false);
       });
       test("characterSet(CharacterSet().addLiterals('!'), Quantity.exactly(2))",
-              () {
-            var regex = FluentRegex()
-                .characterSet(CharacterSet().addLiterals('!'), Quantity.exactly(2));
-            expect(regex.hasMatch('!'), false);
-            expect(regex.hasMatch('!!'), true);
-            expect(regex.findFirst('!!!'), '!!');
-          });
+          () {
+        var regex = FluentRegex()
+            .characterSet(CharacterSet().addLiterals('!'), Quantity.exactly(2));
+        expect(regex.hasMatch('!'), false);
+        expect(regex.hasMatch('!!'), true);
+        expect(regex.findFirst('!!!'), '!!');
+      });
       test("characterSet(CharacterSet.exclude().addLiterals('#'))", () {
         var regex =
-        FluentRegex().characterSet(CharacterSet.exclude().addLiterals('#'));
+            FluentRegex().characterSet(CharacterSet.exclude().addLiterals('#'));
         expect(regex.hasMatch('1'), true);
         expect(regex.hasMatch('a'), true);
         expect(regex.hasMatch('#'), false);
@@ -476,22 +476,22 @@ void main() {
 
     group('method: addRange()', () {
       test("characterSet(CharacterSet().addRange('k', 'p').addRange('2', '6'))",
-              () {
-            var regex = FluentRegex()
-                .characterSet(CharacterSet().addRange('k', 'p').addRange('2', '6'));
-            expect(regex.hasMatch('l'), true);
-            expect(regex.hasMatch('5'), true);
-            expect(regex.hasMatch('a'), false);
-          });
+          () {
+        var regex = FluentRegex()
+            .characterSet(CharacterSet().addRange('k', 'p').addRange('2', '6'));
+        expect(regex.hasMatch('l'), true);
+        expect(regex.hasMatch('5'), true);
+        expect(regex.hasMatch('a'), false);
+      });
       test("characterSet(CharacterSet().addLiterals('!'), Quantity.exactly(2))",
-              () {
-            var regex = FluentRegex().characterSet(
-                CharacterSet().addRange('k', 'p').addRange('2', '6'),
-                Quantity.exactly(2));
-            expect(regex.hasMatch('k'), false);
-            expect(regex.hasMatch('k6'), true);
-            expect(regex.findFirst('m56'), 'm5');
-          });
+          () {
+        var regex = FluentRegex().characterSet(
+            CharacterSet().addRange('k', 'p').addRange('2', '6'),
+            Quantity.exactly(2));
+        expect(regex.hasMatch('k'), false);
+        expect(regex.hasMatch('k6'), true);
+        expect(regex.findFirst('m56'), 'm5');
+      });
       test("characterSet(CharacterSet.exclude().addLiterals('#'))", () {
         var regex = FluentRegex().characterSet(
             CharacterSet.exclude().addRange('k', 'p').addRange('2', '6'));
@@ -506,10 +506,10 @@ void main() {
   group('class: Capture', () {
     test('constructor: Capture.noneCapturing()', () {
       var regex = FluentRegex().literal('a').group(
-        FluentRegex().literal('bc'),
-        type: GroupType.noneCapturing(),
-        quantity: Quantity.exactly(2),
-      );
+            FluentRegex().literal('bc'),
+            type: GroupType.noneCapturing(),
+            quantity: Quantity.exactly(2),
+          );
       expect(regex.hasMatch('abc'), false);
       expect(regex.hasMatch('abcbc'), true);
       expect(regex.findCapturedGroups('abcbc').length, 0);
@@ -519,13 +519,13 @@ void main() {
       var regex = FluentRegex()
           .literal('a')
           .group(
-        FluentRegex().literal('bc'),
-        type: GroupType.captureUnNamed(),
-      )
+            FluentRegex().literal('bc'),
+            type: GroupType.captureUnNamed(),
+          )
           .group(
-        FluentRegex().literal('de'),
-        type: GroupType.captureUnNamed(),
-      );
+            FluentRegex().literal('de'),
+            type: GroupType.captureUnNamed(),
+          );
       expect(regex.findCapturedGroups('abcdef').length, 2);
       expect(regex.findCapturedGroups('abcdef')['0'], 'bc');
       expect(regex.findCapturedGroups('abcdef')['1'], 'de');
@@ -535,13 +535,13 @@ void main() {
       var regex = FluentRegex()
           .literal('a')
           .group(
-        FluentRegex().literal('bc'),
-        type: GroupType.captureNamed('first'),
-      )
+            FluentRegex().literal('bc'),
+            type: GroupType.captureNamed('first'),
+          )
           .group(
-        FluentRegex().literal('de'),
-        type: GroupType.captureNamed('second'),
-      );
+            FluentRegex().literal('de'),
+            type: GroupType.captureNamed('second'),
+          );
       expect(regex.findCapturedGroups('abcdef').length, 2);
       expect(regex.findCapturedGroups('abcdef')['first'], 'bc');
       expect(regex.findCapturedGroups('abcdef')['second'], 'de');
@@ -551,9 +551,9 @@ void main() {
       // Looking for d only when it is followed by r
       // r will not be part of the result
       var regex = FluentRegex().literal('d').group(
-        FluentRegex().literal('r'),
-        type: GroupType.lookAhead(),
-      );
+            FluentRegex().literal('r'),
+            type: GroupType.lookAhead(),
+          );
       expect(regex.findFirst('drive'), 'd');
       expect(regex.hasMatch('beard'), false);
     });
@@ -562,9 +562,9 @@ void main() {
       // Looking for d only when it is NOT followed by r
       // r will not be part of the result
       var regex = FluentRegex().literal('d').group(
-        FluentRegex().literal('r'),
-        type: GroupType.lookAheadAnythingBut(),
-      );
+            FluentRegex().literal('r'),
+            type: GroupType.lookAheadAnythingBut(),
+          );
       expect(regex.hasMatch('drive'), false);
       expect(regex.findFirst('beard'), 'd');
     });
@@ -574,9 +574,9 @@ void main() {
       // r will not be part of the result
       var regex = FluentRegex()
           .group(
-        FluentRegex().literal('r'),
-        type: GroupType.lookPreceding(),
-      )
+            FluentRegex().literal('r'),
+            type: GroupType.lookPreceding(),
+          )
           .literal('d');
       expect(regex.hasMatch('drive'), false);
       expect(regex.findFirst('beard'), 'd');
@@ -587,9 +587,9 @@ void main() {
       // r will not be part of the result
       var regex = FluentRegex()
           .group(
-        FluentRegex().literal('r'),
-        type: GroupType.lookPrecedingAnythingBut(),
-      )
+            FluentRegex().literal('r'),
+            type: GroupType.lookPrecedingAnythingBut(),
+          )
           .literal('d');
       expect(regex.findFirst('drive'), 'd');
       expect(regex.hasMatch('beard'), false);
