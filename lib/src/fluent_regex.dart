@@ -431,7 +431,7 @@ class FluentRegex implements RegExp {
     var matches = _toRegExp().allMatches(source, start);
     for (var match in matches) {
       var groupNames = match.groupNames;
-      if (groupNames.length == 0) {
+      if (groupNames.isEmpty) {
         _appendUnNamedCapturedGroupResults(match, results);
       } else {
         _appendNamedCapturedGroupResults(match, results);
@@ -748,7 +748,7 @@ extension CaseTypeExtension on CaseType {
 class CharacterSet {
   final Scope _mode;
   String _literals = '';
-  Set<String> _ranges = {};
+  final Set<String> _ranges = {};
 
   CharacterSet() : _mode = Scope.include;
 
