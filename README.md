@@ -39,5 +39,5 @@ This package was inspired by DartVerbalExpressions
 
 Additional benefits of the fluent_regex package:
 - FluentRegex implements RegExp
-- All methods have a optional quantity parameter: no more confusion where the quantifier belongs to
+- All methods have an optional quantity parameter: no more confusion where the quantifier belongs to
 - The CharacterSet class allows you to fluently define a bracket expression
