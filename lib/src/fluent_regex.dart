@@ -338,14 +338,14 @@ class FluentRegex implements RegExp {
   /// characters to escape are:   \^$.|?*+()[]{}
   ///
   /// Example:
-  /// expect(FluentRegex.escape('a\\^\$.bc|?*d+()[]{}1'),
-  /// 'a\\\\\\^\\\$\\.bc\\|\\?\\*d\\+\\(\\)\\[\\]\\{\\}1');
+  /// expect(FluentRegex.escape('a\\^\$.bc|?*d+-()[]{}1'),
+  /// 'a\\\\\\^\\\$\\.bc\\|\\?\\*d\\+\\-\\(\\)\\[\\]\\{\\}1');
 
   static String escape(String value) {
     if (value.isEmpty) return value;
     // const pattern = '[\\W]';
     const pattern =
-        '(?:\\\\|\\^|\\\$|\\.|\\||\\?|\\*|\\+|\\(|\\)|\\[|\\]|\\{|\\})';
+        '(?:\\\\|\\^|\\\$|\\.|\\||\\?|\\*|\\+|\\-|\\(|\\)|\\[|\\]|\\{|\\})';
     return value.replaceAllMapped(RegExp(pattern), (Match match) {
       return '\\${match.group(0)}';
     });

@@ -244,9 +244,9 @@ void main() {
 
     group('Conversion', () {
       group('method: escape', () {
-        test("method: escape('a\\^\$.bc|?*d+()[]{}1')", () {
-          expect(FluentRegex.escape('a\\^\$.bc|?*d+()[]{}1'),
-              'a\\\\\\^\\\$\\.bc\\|\\?\\*d\\+\\(\\)\\[\\]\\{\\}1');
+        test("method: escape('a\\^\$.bc|?*d+-()[]{}1')", () {
+          expect(FluentRegex.escape('a\\^\$.bc|?*d+-()[]{}1'),
+              'a\\\\\\^\\\$\\.bc\\|\\?\\*d\\+\\-\\(\\)\\[\\]\\{\\}1');
         });
         test("method: escape('\\')", () {
           expect(FluentRegex.escape('\\'), '\\\\');
@@ -274,6 +274,9 @@ void main() {
         });
         test("method: escape('+')", () {
           expect(FluentRegex.escape('+'), '\\+');
+        });
+        test("method: escape('-')", () {
+          expect(FluentRegex.escape('-'), '\\-');
         });
         test("method: escape('(')", () {
           expect(FluentRegex.escape('('), '\\(');
