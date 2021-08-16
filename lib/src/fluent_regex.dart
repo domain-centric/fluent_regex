@@ -435,28 +435,54 @@ class FluentRegex implements RegExp {
   ///                             CONVENIENCE METHODS
   /// ========================================================================
 
+  /// Example:
+  /// expect(FluentRegex().digit().hasNoMatch('a'), true);
+  /// expect(FluentRegex().letter().hasNoMatch('a'), false);
   bool hasNoMatch(String input) => !hasMatch(input);
 
+  /// Example:
+  /// expect(FluentRegex().literal('a').replaceFirst('bababa', 'c'), 'bcbaba');
   String replaceFirst(String source, String replacement) =>
       source.replaceFirst(_toRegExp(), replacement);
 
+  /// Example:
+  /// expect(FluentRegex().literal('a').replaceAll('bababa', 'c'), 'bcbcbc');
   String replaceAll(String source, String replacement) =>
       source.replaceAll(_toRegExp(), replacement);
 
+  /// Example:
+  /// expect(FluentRegex().literal('a').removeFirst('bababa'), 'bbaba');
   String removeFirst(String source) => source.replaceFirst(_toRegExp(), '');
 
+  /// Example:
+  /// expect(FluentRegex().literal('a').removeAll('bababa'), 'bbb');
   String removeAll(String source) => source.replaceAll(_toRegExp(), '');
 
+  /// Example:
+  /// expect(FluentRegex().literal('a').findFirst('bababa'), 'a');
+  /// expect(FluentRegex().literal('c').findFirst('bababa'), null);
   String? findFirst(String source) {
     var regExpMatch = _toRegExp().firstMatch(source);
     return (regExpMatch == null) ? null : regExpMatch.group(0);
   }
 
+  /// Example:
+  /// expect(FluentRegex().digit().findAll('a1bc2D3e&(f4'), ['1', '2', '3', '4']);
+  /// expect(FluentRegex().letter().findAll('123&(4'), []);
   List<String> findAll(String source, [int start = 0]) => _toRegExp()
       .allMatches(source, start)
       .map((regExpMatch) => regExpMatch.group(0)!)
       .toList();
 
+  /// Example:
+  /// expect(
+  /// FluentRegex()
+  ///     .group(FluentRegex().literal('a').digit().literal('b'),
+  /// type: GroupType.captureNamed('name'))
+  ///     .findCapturedGroups('@abc2a7bD3e&(f4'),
+  /// {
+  /// 'name': 'a7b',
+  /// });
   Map<String, String?> findCapturedGroups(String source, [int start = 0]) {
     Map<String, String?> results = {};
     var matches = _toRegExp().allMatches(source, start);

@@ -328,8 +328,40 @@ void main() {
 
     group('Convenience methods', () {
       test('method: hasNoMatch', () {
-        expect(FluentRegex().digit().hasNoMatch('abc'), true);
-        expect(FluentRegex().letter().hasNoMatch('abc'), false);
+        expect(FluentRegex().digit().hasNoMatch('a'), true);
+        expect(FluentRegex().letter().hasNoMatch('a'), false);
+      });
+      test('method: replaceFirst', () {
+        expect(
+            FluentRegex().literal('a').replaceFirst('bababa', 'c'), 'bcbaba');
+      });
+      test('method: replaceAll', () {
+        expect(FluentRegex().literal('a').replaceAll('bababa', 'c'), 'bcbcbc');
+      });
+      test('method: removeFirst', () {
+        expect(FluentRegex().literal('a').removeFirst('bababa'), 'bbaba');
+      });
+      test('method: removeAll', () {
+        expect(FluentRegex().literal('a').removeAll('bababa'), 'bbb');
+      });
+      test('method: findFirst', () {
+        expect(FluentRegex().literal('a').findFirst('bababa'), 'a');
+        expect(FluentRegex().literal('c').findFirst('bababa'), null);
+      });
+      test('method: findAll', () {
+        expect(FluentRegex().digit().findAll('a1bc2D3e&(f4'),
+            ['1', '2', '3', '4']);
+        expect(FluentRegex().letter().findAll('123&(4'), []);
+      });
+      test('method: findCapturedGroups', () {
+        expect(
+            FluentRegex()
+                .group(FluentRegex().literal('a').digit().literal('b'),
+                    type: GroupType.captureNamed('name'))
+                .findCapturedGroups('@abc2a7bD3e&(f4'),
+            {
+              'name': 'a7b',
+            });
       });
     });
   });
