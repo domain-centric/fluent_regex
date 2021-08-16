@@ -9,19 +9,35 @@ class FluentRegex implements RegExp {
   ///                             FIELDS
   /// ========================================================================
 
-  bool _startOfLine = false;
-  bool _endOfLine = false;
-  bool _ignoreCase = false;
-  bool _isMultiLine = true;
-  String _expression = '';
+  final String _expression;
+  final bool _startOfLine;
+  final bool _endOfLine;
+  final bool _ignoreCase;
+  final bool _multiLine;
+
+  FluentRegex([String? expression])
+      : _expression = expression ?? '',
+        _startOfLine = false,
+        _endOfLine = false,
+        _ignoreCase = false,
+        _multiLine = true;
+
+  FluentRegex._copyWith(
+    FluentRegex fluentRegex, {
+    String? expression,
+    bool? startOfLine,
+    bool? endOfLine,
+    bool? ignoreCase,
+    bool? multiLine,
+  })  : _expression = expression ?? fluentRegex._expression,
+        _startOfLine = startOfLine ?? fluentRegex._startOfLine,
+        _endOfLine = endOfLine ?? fluentRegex._endOfLine,
+        _ignoreCase = ignoreCase ?? fluentRegex._ignoreCase,
+        _multiLine = multiLine ?? fluentRegex._multiLine;
 
   /// ========================================================================
   ///                             CONSTRUCTORS
   /// ========================================================================
-
-  FluentRegex();
-
-  FluentRegex.fromExpression(this._expression);
 
   /// ========================================================================
   ///                             FLAG MANIPULATING METHODS
@@ -40,10 +56,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('first line \na'), false);
   /// expect(regex.hasMatch('a'), true);
 
-  FluentRegex multiline([bool enable = true]) {
-    _isMultiLine = enable;
-    return this;
-  }
+  FluentRegex multiline([bool enable = true]) =>
+      FluentRegex._copyWith(this, multiLine: enable);
 
   /// Enable or disable search in one line in prior
   /// to multi line search according to [enable] flag.
@@ -57,10 +71,8 @@ class FluentRegex implements RegExp {
   ///   .searchFirstLineOnly();
   /// expect(regex.hasMatch('first line\na'), false);
   /// expect(regex.hasMatch('a'), true);
-  FluentRegex searchFirstLineOnly([bool enable = true]) {
-    _isMultiLine = !enable;
-    return this;
-  }
+  FluentRegex searchFirstLineOnly([bool enable = true]) =>
+      FluentRegex._copyWith(this, multiLine: !enable);
 
   /// Enable or disable matching with ignoring case according to [enable] flag.
   ///
@@ -72,10 +84,8 @@ class FluentRegex implements RegExp {
   ///   .ignoreCase();
   /// expect(regex.hasMatch('A'), true);
   /// expect(regex.hasMatch('a'), true);
-  FluentRegex ignoreCase([bool enable = true]) {
-    _ignoreCase = enable;
-    return this;
-  }
+  FluentRegex ignoreCase([bool enable = true]) =>
+      FluentRegex._copyWith(this, ignoreCase: enable);
 
   /// Mark the expression to start at the beginning of the line
   ///
@@ -87,10 +97,8 @@ class FluentRegex implements RegExp {
   ///   .literal('abc');
   /// expect(regex.hasMatch('abc12'), true);
   /// expect(regex.hasMatch('12abc'), false);
-  FluentRegex startOfLine([bool enable = true]) {
-    _startOfLine = enable;
-    return this;
-  }
+  FluentRegex startOfLine([bool enable = true]) =>
+      FluentRegex._copyWith(this, startOfLine: enable);
 
   /// Mark the expression to end at the last character of the line
   ///
@@ -102,10 +110,8 @@ class FluentRegex implements RegExp {
   ///   .endOfLine();
   /// expect(regex.hasMatch('abc12'), false);
   /// expect(regex.hasMatch('12abc'), true);
-  FluentRegex endOfLine([bool enable = true]) {
-    _endOfLine = enable;
-    return this;
-  }
+  FluentRegex endOfLine([bool enable = true]) =>
+      FluentRegex._copyWith(this, endOfLine: enable);
 
   /// ========================================================================
   ///                             LITERALS
@@ -120,11 +126,11 @@ class FluentRegex implements RegExp {
   FluentRegex literal(String literal,
       [Quantity quantity = const Quantity.oneTime()]) {
     if (literal.length == 1 || quantity == Quantity.oneTime()) {
-      _expression += escape(literal) + quantity.toString();
+      var newExpression = _expression + escape(literal) + quantity.toString();
+      return FluentRegex._copyWith(this, expression: newExpression);
     } else {
-      group(FluentRegex.fromExpression(escape(literal)), quantity: quantity);
+      return group(FluentRegex(escape(literal)), quantity: quantity);
     }
-    return this;
   }
 
   /// Appends a [CharacterSet] to search for in the next character.
@@ -140,10 +146,9 @@ class FluentRegex implements RegExp {
   /// expect(regex.findFirst('!abc12KP_-!'), 'a');
   /// expect(regex.findFirst('AB!2KP_-abc12KP_-!'), '2');
   FluentRegex characterSet(CharacterSet characterSet,
-      [Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '$characterSet$quantity';
-    return this;
-  }
+          [Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this,
+          expression: '$_expression$characterSet$quantity');
 
   /// ========================================================================
   ///                             SPECIAL CHARACTERS
@@ -158,10 +163,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('5'), true);
   /// expect(regex.hasMatch('_'), true);
   /// expect(regex.hasMatch('%'), false);
-  FluentRegex wordChar([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\w$quantity';
-    return this;
-  }
+  FluentRegex wordChar([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\w$quantity');
 
   /// Appends non-letters or digits, same as [^\w]
   ///
@@ -172,10 +175,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('5'), false);
   /// expect(regex.hasMatch('_'), false);
   /// expect(regex.hasMatch('%'), true);
-  FluentRegex nonWordChar([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\W$quantity';
-    return this;
-  }
+  FluentRegex nonWordChar([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\W$quantity');
 
   /// Appends digit, same as [0-9]
   ///
@@ -186,10 +187,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('5'), true);
   /// expect(regex.hasMatch('_'), false);
   /// expect(regex.hasMatch('%'), false);
-  FluentRegex digit([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\d$quantity';
-    return this;
-  }
+  FluentRegex digit([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\d$quantity');
 
   /// Appends non-digit, same as [^0-9]
   ///
@@ -200,10 +199,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('5'), false);
   /// expect(regex.hasMatch('_'), true);
   /// expect(regex.hasMatch('%'), true);
-  FluentRegex nonDigit([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\D$quantity';
-    return this;
-  }
+  FluentRegex nonDigit([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\D$quantity');
 
   /// Example:
   /// var regex = FluentRegex().letter();
@@ -217,16 +214,15 @@ class FluentRegex implements RegExp {
       Quantity quantity = const Quantity.oneTime()}) {
     switch (caseType) {
       case CaseType.lower:
-        _expression += '[a-z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[a-z]$quantity');
       case CaseType.upper:
-        _expression += '[A-Z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[A-Z]$quantity');
       case CaseType.lowerAndUpper:
-        _expression += '[a-zA-Z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[a-zA-Z]$quantity');
     }
-    return this;
   }
 
   /// Example:
@@ -241,16 +237,15 @@ class FluentRegex implements RegExp {
       Quantity quantity = const Quantity.oneTime()}) {
     switch (caseType) {
       case CaseType.lower:
-        _expression += '[^a-z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[^a-z]$quantity');
       case CaseType.upper:
-        _expression += '[^A-Z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[^A-Z]$quantity');
       case CaseType.lowerAndUpper:
-        _expression += '[^a-zA-Z]$quantity';
-        break;
+        return FluentRegex._copyWith(this,
+            expression: '$_expression[^a-zA-Z]$quantity');
     }
-    return this;
   }
 
   /// appends any character
@@ -258,10 +253,8 @@ class FluentRegex implements RegExp {
   /// Example:
   /// var regex = FluentRegex().anyCharacter();
   /// expect(regex.findFirst('abc'), 'a');
-  FluentRegex anyCharacter([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '.$quantity';
-    return this;
-  }
+  FluentRegex anyCharacter([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression.$quantity');
 
   /// ========================================================================
   ///                             WHITE SPACE CHARACTERS
@@ -275,10 +268,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('hello'), false);
   /// expect(regex.hasMatch('\u0009hello'), true);
   /// expect(regex.hasMatch('hello\tall'), true);
-  FluentRegex tab([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\t$quantity';
-    return this;
-  }
+  FluentRegex tab([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\t$quantity');
 
   /// Appends whitespace character, same as [ \t\n\x0B\f\r]
   ///
@@ -292,10 +283,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('\f'), true);
   /// expect(regex.hasMatch('\r'), true);
   /// expect(regex.hasMatch('h'), false);
-  FluentRegex whiteSpace([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\s$quantity';
-    return this;
-  }
+  FluentRegex whiteSpace([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\s$quantity');
 
   /// Appends non-whitespace character, same as [^\s]
   ///
@@ -309,10 +298,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('\f'), false);
   /// expect(regex.hasMatch('\r'), false);
   /// expect(regex.hasMatch('h'), true);
-  FluentRegex nonWhiteSpace([Quantity quantity = const Quantity.oneTime()]) {
-    _expression += '\\S$quantity';
-    return this;
-  }
+  FluentRegex nonWhiteSpace([Quantity quantity = const Quantity.oneTime()]) =>
+      FluentRegex._copyWith(this, expression: '$_expression\\S$quantity');
 
   /// Appends universal (Unix + Windows CRLF + Macintosh) line break expression
   ///
@@ -324,15 +311,12 @@ class FluentRegex implements RegExp {
   /// expect(regex.findFirst('hello\r\nworld'), '\r\n');
   /// expect(regex.findFirst('hello\r\rworld'), '\r\r');
   /// expect(regex.hasMatch('hello world'), false);
-  FluentRegex lineBreak([Quantity quantity = const Quantity.oneTime()]) {
-    or([
-      FluentRegex.fromExpression('\\r\\r'),
-      FluentRegex.fromExpression('\\r\\n'),
-      FluentRegex.fromExpression('\\r'),
-      FluentRegex.fromExpression('\\n'),
-    ], quantity);
-    return this;
-  }
+  FluentRegex lineBreak([Quantity quantity = const Quantity.oneTime()]) => or([
+        FluentRegex('\\r\\r'),
+        FluentRegex('\\r\\n'),
+        FluentRegex('\\r'),
+        FluentRegex('\\n'),
+      ], quantity);
 
   /// ========================================================================
   ///                             GROUP
@@ -349,11 +333,10 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('abc'), false);
   /// expect(regex.hasMatch('abcbc'), true);
   FluentRegex group(FluentRegex fluentRegex,
-      {GroupType type = const GroupType.noneCapturing(),
-      Quantity quantity = const Quantity.oneTime()}) {
-    _expression += '($type$fluentRegex)$quantity';
-    return this;
-  }
+          {GroupType type = const GroupType.noneCapturing(),
+          Quantity quantity = const Quantity.oneTime()}) =>
+      FluentRegex._copyWith(this,
+          expression: '$_expression($type$fluentRegex)$quantity');
 
   /// Appends multiple [FluentRegex]pressions as an or group
   ///
@@ -374,8 +357,7 @@ class FluentRegex implements RegExp {
       }
       orExpression += fluentRegex.toString();
     }
-    group(FluentRegex.fromExpression(orExpression), quantity: quantity);
-    return this;
+    return group(FluentRegex(orExpression), quantity: quantity);
   }
 
   /// ========================================================================
@@ -391,7 +373,6 @@ class FluentRegex implements RegExp {
 
   static String escape(String value) {
     if (value.isEmpty) return value;
-    // const pattern = '[\\W]';
     const pattern =
         '(?:\\\\|\\^|\\\$|\\.|\\||\\?|\\*|\\+|\\-|\\(|\\)|\\[|\\]|\\{|\\})';
     return value.replaceAllMapped(RegExp(pattern), (Match match) {
@@ -403,9 +384,9 @@ class FluentRegex implements RegExp {
   /// This is a private method because [FluentRegex] already implements [RegExp] (using this method)
   /// Returns resulting [RegExp] object
   RegExp _toRegExp() => RegExp(
-        toString(),
+    toString(),
         caseSensitive: !_ignoreCase,
-        multiLine: _isMultiLine,
+        multiLine: _multiLine,
       );
 
   /// Overrides toString
@@ -514,17 +495,17 @@ class FluentRegex implements RegExp {
 
 // TODO standard expressions such as URI, URL, XML_ELEMENT, ETC
 
-  // Parsing email addresses based on the RFC 5322 standard:
-  //
-  // (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*
-  // |  "(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
-  // |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")
-  // @ (?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
-  // |  \[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
-  // (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:
-  // (?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]
-  // |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)
-  // \])
+// Parsing email addresses based on the RFC 5322 standard:
+//
+// (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*
+// |  "(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
+// |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")
+// @ (?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+// |  \[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+// (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:
+// (?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]
+// |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)
+// \])
 
   FluentRegex get emailAddress {
     var nameSet = CharacterSet()
