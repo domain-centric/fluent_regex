@@ -1,6 +1,6 @@
 name: fluent_regex
 description: Package that helps to construct regular expressions in a readable fashion.
-version: 0.0.3
+version: 1.0.0
 homepage: https://github.com/efficientyboosters/fluent_regex
 
 environment:

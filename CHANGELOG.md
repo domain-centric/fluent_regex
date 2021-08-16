@@ -1,3 +1,5 @@
+# 1.0.0
+https://github.com/efficientyboosters/fluent_regex/milestone/4?closed=1
 # 0.0.3
 https://github.com/efficientyboosters/fluent_regex/milestone/3?closed=1
 # 0.0.2
