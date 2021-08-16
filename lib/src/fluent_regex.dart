@@ -205,6 +205,54 @@ class FluentRegex implements RegExp {
     return this;
   }
 
+  /// Example:
+  /// var regex = FluentRegex().letter();
+  /// expect(regex.hasMatch('l'), true);
+  /// expect(regex.hasMatch('W'), true);
+  /// expect(regex.hasMatch('5'), false);
+  /// expect(regex.hasMatch('_'), false);
+  /// expect(regex.hasMatch('%'), false);
+  FluentRegex letter(
+      {CaseType caseType = CaseType.lowerAndUpper,
+      Quantity quantity = const Quantity.oneTime()}) {
+    switch (caseType) {
+      case CaseType.lower:
+        _expression += '[a-z]$quantity';
+        break;
+      case CaseType.upper:
+        _expression += '[A-Z]$quantity';
+        break;
+      case CaseType.lowerAndUpper:
+        _expression += '[a-zA-Z]$quantity';
+        break;
+    }
+    return this;
+  }
+
+  /// Example:
+  /// var regex = FluentRegex().nonLetter();
+  /// expect(regex.hasMatch('5'), true);
+  /// expect(regex.hasMatch('_'), true);
+  /// expect(regex.hasMatch('%'), true);
+  /// expect(regex.hasMatch('l'), false);
+  /// expect(regex.hasMatch('W'), false);
+  FluentRegex nonLetter(
+      {CaseType caseType = CaseType.lowerAndUpper,
+      Quantity quantity = const Quantity.oneTime()}) {
+    switch (caseType) {
+      case CaseType.lower:
+        _expression += '[^a-z]$quantity';
+        break;
+      case CaseType.upper:
+        _expression += '[^A-Z]$quantity';
+        break;
+      case CaseType.lowerAndUpper:
+        _expression += '[^a-zA-Z]$quantity';
+        break;
+    }
+    return this;
+  }
+
   /// appends any character
   ///
   /// Example:
@@ -405,6 +453,8 @@ class FluentRegex implements RegExp {
   /// ========================================================================
   ///                             CONVENIENCE METHODS
   /// ========================================================================
+
+  bool hasNoMatch(String input) => !hasMatch(input);
 
   String replaceFirst(String source, String replacement) =>
       source.replaceFirst(_toRegExp(), replacement);

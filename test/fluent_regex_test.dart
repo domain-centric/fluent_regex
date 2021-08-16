@@ -125,6 +125,23 @@ void main() {
         expect(regex.hasMatch('_'), true);
         expect(regex.hasMatch('%'), true);
       });
+      test('method: letter()', () {
+        var regex = FluentRegex().letter();
+        expect(regex.hasMatch('l'), true);
+        expect(regex.hasMatch('W'), true);
+        expect(regex.hasMatch('5'), false);
+        expect(regex.hasMatch('_'), false);
+        expect(regex.hasMatch('%'), false);
+      });
+      test('method: nonLetter()', () {
+        var regex = FluentRegex().nonLetter();
+        expect(regex.hasMatch('5'), true);
+        expect(regex.hasMatch('_'), true);
+        expect(regex.hasMatch('%'), true);
+        expect(regex.hasMatch('l'), false);
+        expect(regex.hasMatch('W'), false);
+      });
+
       test('method: anyCharacter()', () {
         var regex = FluentRegex().anyCharacter();
         expect(regex.findFirst('abc'), 'a');
@@ -309,23 +326,14 @@ void main() {
       });
     });
 
-    group('Combined', () {
-      test('', () {
-        FluentRegex()
-            .startOfLine()
-            .characterSet(
-                CharacterSet().addLetters().addDigits().addLiterals(".-_"),
-                Quantity.oneOrMoreTimes())
-            .literal("@")
-            .characterSet(
-                CharacterSet().addLetters().addDigits().addLiterals(".-"),
-                Quantity.oneOrMoreTimes())
-            .literal(".")
-            .characterSet(CharacterSet().addLetters(), Quantity.between(2, 4))
-            .endOfLine();
+    group('Convenience methods', () {
+      test('method: hasNoMatch', () {
+        expect(FluentRegex().digit().hasNoMatch('abc'), true);
+        expect(FluentRegex().letter().hasNoMatch('abc'), false);
       });
     });
   });
+
   group('class: Quantity', () {
     test('constructor: zeroOrOneTime()', () {
       var regex = FluentRegex().literal('a', Quantity.zeroOrOneTime());
