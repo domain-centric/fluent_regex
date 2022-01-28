@@ -582,16 +582,13 @@ void main() {
     group('method: addLineBreaks()', () {
       test('LineBreaks', () {
         var regex = FluentRegex().characterSet(CharacterSet().addLineBreaks());
-         expect(regex.findFirst('hello\rworld'), '\r');
-         expect(regex.findFirst('hello\nworld'), '\n');
-         expect(regex.findAll('hello\r\nworld').length, 2);
-         expect(regex.findAll('hello\r\rworld').length, 2);
-         expect(regex.hasMatch('hello world'), false);
+        expect(regex.findFirst('hello\rworld'), '\r');
+        expect(regex.findFirst('hello\nworld'), '\n');
+        expect(regex.findAll('hello\r\nworld').length, 2);
+        expect(regex.findAll('hello\r\rworld').length, 2);
+        expect(regex.hasMatch('hello world'), false);
       });
     });
-
-
-
 
     group('method: addLetters()', () {
       test('characterSet(CharacterSet().addLetters())', () {

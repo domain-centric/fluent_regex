@@ -316,8 +316,10 @@ class FluentRegex implements RegExp {
   /// expect(regex.findFirst('hello\r\rworld'), '\r\r');
   /// expect(regex.hasMatch('hello world'), false);
   FluentRegex lineBreak([Quantity quantity = const Quantity.oneTime()]) => or([
-        FluentRegex(SpecialCharacter.carriageReturn + SpecialCharacter.carriageReturn),
-        FluentRegex(SpecialCharacter.carriageReturn + SpecialCharacter.lineFeed),
+        FluentRegex(
+            SpecialCharacter.carriageReturn + SpecialCharacter.carriageReturn),
+        FluentRegex(
+            SpecialCharacter.carriageReturn + SpecialCharacter.lineFeed),
         FluentRegex(SpecialCharacter.carriageReturn),
         FluentRegex(SpecialCharacter.lineFeed),
       ], quantity);
@@ -804,22 +806,30 @@ extension CaseTypeExtension on CaseType {
 class SpecialCharacter {
   /// Same as: [0-9]
   static final String digit = '\\d';
+
   /// Same as: ^[0-9]
   static final String noneDigit = '\\D';
+
   /// Same as: [a-zA-Z0-9_]
   static final String wordChar = '\\w';
+
   /// Same as: ^[a-zA-Z0-9_]
   static final String noneWordChar = '\\W';
   static final String wordBoundary = '\\b';
   static final String noneWordBoundary = '\\B';
+
   /// Same as: [ \t\n\x0B\f\r]
   static final String whiteSpace = '\\s';
+
   /// Same as: [^ \t\n\x0B\f\r]
   static final String noneWhiteSpace = '\\S';
+
   /// Same as: [\u0009]
   static final String tab = '\\t';
+
   /// Same as: [\u000D]
   static final String carriageReturn = '\\r';
+
   /// Same as: [\u000A]
   static final String lineFeed = '\\n';
 }
@@ -934,8 +944,6 @@ class CharacterSet {
     _sets.add(SpecialCharacter.lineFeed);
     return this;
   }
-
-
 
   /// Example:
   /// var regex = FluentRegex().characterSet(CharacterSet().addLetters());
