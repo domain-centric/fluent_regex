@@ -178,7 +178,7 @@ void main() {
         expect(regex.hasMatch('h'), true);
       });
 
-      test('method: nonWhiteSpace()', () {
+      test('method: lineBreak()', () {
         var regex = FluentRegex().lineBreak();
         expect(regex.findFirst('hello\rworld'), '\r');
         expect(regex.findFirst('hello\nworld'), '\n');
@@ -486,8 +486,7 @@ void main() {
 
     group('method: addWordCharacters()', () {
       test('characterSet(CharacterSet().addWordCharacters())', () {
-        var regex =
-            FluentRegex().characterSet(CharacterSet().addWordChars());
+        var regex = FluentRegex().characterSet(CharacterSet().addWordChars());
         expect(regex.hasMatch('a'), true);
         expect(regex.hasMatch('Z'), true);
         expect(regex.hasMatch('1'), true);
@@ -496,16 +495,16 @@ void main() {
       test(
           'characterSet(CharacterSet().addWordCharacters(), Quantity.exactly(2))',
           () {
-        var regex = FluentRegex().characterSet(
-            CharacterSet().addWordChars(), Quantity.exactly(2));
+        var regex = FluentRegex()
+            .characterSet(CharacterSet().addWordChars(), Quantity.exactly(2));
         expect(regex.hasMatch('1'), false);
         expect(regex.hasMatch('a3'), true);
         expect(regex.hasMatch('a!'), false);
         expect(regex.findFirst('b9d'), 'b9');
       });
       test('characterSet(CharacterSet.exclude().addWordCharacters())', () {
-        var regex = FluentRegex()
-            .characterSet(CharacterSet.exclude().addWordChars());
+        var regex =
+            FluentRegex().characterSet(CharacterSet.exclude().addWordChars());
         expect(regex.hasMatch('1'), false);
         expect(regex.hasMatch('!'), true);
       });
@@ -535,6 +534,32 @@ void main() {
             .characterSet(CharacterSet.exclude().addNoneWordChars());
         expect(regex.hasMatch('1'), true);
         expect(regex.hasMatch('!'), false);
+      });
+    });
+
+    group('method: addWhiteSpaces()', () {
+      test('WhiteSpaces', () {
+        var regex = FluentRegex().characterSet(CharacterSet().addWhiteSpaces());
+        expect(regex.hasMatch(' '), true);
+        expect(regex.hasMatch('\u0009'), true);
+        expect(regex.hasMatch('\n'), true);
+        expect(regex.hasMatch('\x0B'), true);
+        expect(regex.hasMatch('\f'), true);
+        expect(regex.hasMatch('\r'), true);
+        expect(regex.hasMatch('h'), false);
+      });
+    });
+    group('method: addNoneWhiteSpaces()', () {
+      test('NoneWhiteSpaces', () {
+        var regex =
+            FluentRegex().characterSet(CharacterSet().addNoneWhiteSpaces());
+        expect(regex.hasMatch(' '), false);
+        expect(regex.hasMatch('\u0009'), false);
+        expect(regex.hasMatch('\n'), false);
+        expect(regex.hasMatch('\x0B'), false);
+        expect(regex.hasMatch('\f'), false);
+        expect(regex.hasMatch('\r'), false);
+        expect(regex.hasMatch('h'), true);
       });
     });
 

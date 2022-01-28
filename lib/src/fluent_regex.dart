@@ -269,7 +269,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('\u0009hello'), true);
   /// expect(regex.hasMatch('hello\tall'), true);
   FluentRegex tab([Quantity quantity = const Quantity.oneTime()]) =>
-      FluentRegex._copyWith(this, expression: '$_expression\\t$quantity');
+      FluentRegex._copyWith(this,
+          expression: '$_expression${SpecialCharacter.tab}$quantity');
 
   /// Appends whitespace character, same as [ \t\n\x0B\f\r]
   ///
@@ -284,7 +285,8 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('\r'), true);
   /// expect(regex.hasMatch('h'), false);
   FluentRegex whiteSpace([Quantity quantity = const Quantity.oneTime()]) =>
-      FluentRegex._copyWith(this, expression: '$_expression\\s$quantity');
+      FluentRegex._copyWith(this,
+          expression: '$_expression${SpecialCharacter.whiteSpace}$quantity');
 
   /// Appends non-whitespace character, same as [^\s]
   ///
@@ -299,7 +301,9 @@ class FluentRegex implements RegExp {
   /// expect(regex.hasMatch('\r'), false);
   /// expect(regex.hasMatch('h'), true);
   FluentRegex nonWhiteSpace([Quantity quantity = const Quantity.oneTime()]) =>
-      FluentRegex._copyWith(this, expression: '$_expression\\S$quantity');
+      FluentRegex._copyWith(this,
+          expression:
+              '$_expression${SpecialCharacter.noneWhiteSpace}$quantity');
 
   /// Appends universal (Unix + Windows CRLF + Macintosh) line break expression
   ///
@@ -312,10 +316,10 @@ class FluentRegex implements RegExp {
   /// expect(regex.findFirst('hello\r\rworld'), '\r\r');
   /// expect(regex.hasMatch('hello world'), false);
   FluentRegex lineBreak([Quantity quantity = const Quantity.oneTime()]) => or([
-        FluentRegex('\\r\\r'),
-        FluentRegex('\\r\\n'),
-        FluentRegex('\\r'),
-        FluentRegex('\\n'),
+        FluentRegex(SpecialCharacter.returnChar + SpecialCharacter.returnChar),
+        FluentRegex(SpecialCharacter.returnChar + SpecialCharacter.newLine),
+        FluentRegex(SpecialCharacter.returnChar),
+        FluentRegex(SpecialCharacter.newLine),
       ], quantity);
 
   /// ========================================================================
@@ -384,7 +388,7 @@ class FluentRegex implements RegExp {
   /// This is a private method because [FluentRegex] already implements [RegExp] (using this method)
   /// Returns resulting [RegExp] object
   RegExp _toRegExp() => RegExp(
-    toString(),
+        toString(),
         caseSensitive: !_ignoreCase,
         multiLine: _multiLine,
       );
@@ -797,6 +801,31 @@ extension CaseTypeExtension on CaseType {
   }
 }
 
+class SpecialCharacter {
+  /// Same as: [0-9]
+  static final String digit = '\\d';
+
+  /// Same as: ^[0-9]
+  static final String noneDigit = '\\D';
+
+  /// Same as: [a-zA-Z0-9_]
+  static final String wordChar = '\\w';
+
+  /// Same as: ^[a-zA-Z0-9_]
+  static final String noneWordChar = '\\W';
+  static final String wordBoundary = '\\b';
+  static final String noneWordBoundary = '\\B';
+
+  /// Same as: [ \t\n\x0B\f\r]
+  static final String whiteSpace = '\\s';
+
+  /// Same as: [^ \t\n\x0B\f\r]
+  static final String noneWhiteSpace = '\\S';
+  static final String tab = '\\t';
+  static final String returnChar = '\\r';
+  static final String newLine = '\\n';
+}
+
 /// a [CharacterSet] is a collection of characters that is being searched for.
 /// e.g. it may contain letters and/or digits and/or other literals.
 /// You can also add a range e.g.:
@@ -810,27 +839,27 @@ class CharacterSet {
 
   CharacterSet.exclude() : _mode = Scope.exclude;
 
-  /// Same as: 0-9
+  /// See [SpecialCharacter.digit]
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
   /// expect(regex.hasMatch('1'),true);
   /// expect(regex.hasMatch('a'),false);
   CharacterSet addDigits() {
-    _sets.add('\\d');
+    _sets.add(SpecialCharacter.digit);
     return this;
   }
 
-  /// Same as: ^0-9
+  /// See [SpecialCharacter.noneDigit]
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
   /// expect(regex.hasMatch('1'),false);
   /// expect(regex.hasMatch('a'),true);
   CharacterSet addNoneDigits() {
-    _sets.add('\\D');
+    _sets.add(SpecialCharacter.noneDigit);
     return this;
   }
 
-  /// Same as: a-zA-Z0-9_
+  /// See [SpecialCharacter.wordChar]
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addWordCharacters());
   /// expect(regex.hasMatch('a'),true);
@@ -838,11 +867,11 @@ class CharacterSet {
   /// expect(regex.hasMatch('1'),true);
   /// expect(regex.hasMatch('!'),false);
   CharacterSet addWordChars() {
-    _sets.add('\\w');
+    _sets.add(SpecialCharacter.wordChar);
     return this;
   }
 
-  /// Same as: ^a-zA-Z0-9_
+  /// See [SpecialCharacter.noneWordChar]
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addNoneWordCharacters());
   /// expect(regex.hasMatch('a'),false);
@@ -850,7 +879,37 @@ class CharacterSet {
   /// expect(regex.hasMatch('1'),false);
   /// expect(regex.hasMatch('!'),true);
   CharacterSet addNoneWordChars() {
-    _sets.add('\\W');
+    _sets.add(SpecialCharacter.noneWordChar);
+    return this;
+  }
+
+  /// See [SpecialCharacter.whiteSpace]
+  /// Example:
+  /// var regex = FluentRegex().characterSet(CharacterSet().addWhiteSpaces());
+  /// expect(regex.hasMatch(' '), true);
+  /// expect(regex.hasMatch('\u0009'), true);
+  /// expect(regex.hasMatch('\n'), true);
+  /// expect(regex.hasMatch('\x0B'), true);
+  /// expect(regex.hasMatch('\f'), true);
+  /// expect(regex.hasMatch('\r'), true);
+  /// expect(regex.hasMatch('h'), false);
+  CharacterSet addWhiteSpaces() {
+    _sets.add(SpecialCharacter.whiteSpace);
+    return this;
+  }
+
+  /// See [SpecialCharacter.noneWhiteSpace]
+  /// Example:
+  /// var regex = FluentRegex().characterSet(CharacterSet().addNoneWhiteSpaces());
+  /// expect(regex.hasMatch(' '), false);
+  /// expect(regex.hasMatch('\u0009'), false);
+  /// expect(regex.hasMatch('\n'), false);
+  /// expect(regex.hasMatch('\x0B'), false);
+  /// expect(regex.hasMatch('\f'), false);
+  /// expect(regex.hasMatch('\r'), false);
+  /// expect(regex.hasMatch('h'), true);
+  CharacterSet addNoneWhiteSpaces() {
+    _sets.add(SpecialCharacter.noneWhiteSpace);
     return this;
   }
 
@@ -887,7 +946,6 @@ class CharacterSet {
     _sets.add(range);
     return this;
   }
-
 
   @override
   String toString() {
