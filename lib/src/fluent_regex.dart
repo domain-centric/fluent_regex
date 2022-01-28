@@ -832,13 +832,25 @@ class CharacterSet {
 
   /// Same as: a-zA-Z0-9_
   /// Example:
-  /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
+  /// var regex=FluentRegex().characterSet(CharacterSet().addWordCharacters());
   /// expect(regex.hasMatch('a'),true);
   /// expect(regex.hasMatch('Z'),true);
   /// expect(regex.hasMatch('1'),true);
   /// expect(regex.hasMatch('!'),false);
   CharacterSet addWordCharacters() {
     _sets.add('\\w');
+    return this;
+  }
+
+  /// Same as: ^a-zA-Z0-9_
+  /// Example:
+  /// var regex=FluentRegex().characterSet(CharacterSet().addNoneWordCharacters());
+  /// expect(regex.hasMatch('a'),false);
+  /// expect(regex.hasMatch('Z'),false);
+  /// expect(regex.hasMatch('1'),false);
+  /// expect(regex.hasMatch('!'),true);
+  CharacterSet addNoneWordCharacters() {
+    _sets.add('\\W');
     return this;
   }
 

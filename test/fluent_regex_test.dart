@@ -511,6 +511,33 @@ void main() {
       });
     });
 
+    group('method: addNoneWordCharacters()', () {
+      test('characterSet(CharacterSet().addNoneWordCharacters())', () {
+        var regex =
+            FluentRegex().characterSet(CharacterSet().addNoneWordCharacters());
+        expect(regex.hasMatch('a'), false);
+        expect(regex.hasMatch('Z'), false);
+        expect(regex.hasMatch('1'), false);
+        expect(regex.hasMatch('!'), true);
+      });
+      test(
+          'characterSet(CharacterSet().addNoneWordCharacters(), Quantity.exactly(2))',
+          () {
+        var regex = FluentRegex().characterSet(
+            CharacterSet().addNoneWordCharacters(), Quantity.exactly(2));
+        expect(regex.hasMatch('!'), false);
+        expect(regex.hasMatch('!@'), true);
+        expect(regex.hasMatch('a!'), false);
+        expect(regex.findFirst('!@9d'), '!@');
+      });
+      test('characterSet(CharacterSet.exclude().addNoneWordCharacters())', () {
+        var regex = FluentRegex()
+            .characterSet(CharacterSet.exclude().addNoneWordCharacters());
+        expect(regex.hasMatch('1'), true);
+        expect(regex.hasMatch('!'), false);
+      });
+    });
+
     group('method: addLetters()', () {
       test('characterSet(CharacterSet().addLetters())', () {
         var regex = FluentRegex().characterSet(CharacterSet().addLetters());
