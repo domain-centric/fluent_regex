@@ -1,3 +1,5 @@
+# 1.0.3
+[See Github Milestone](https://github.com/domain-centric/fluent_regex/milestone/7?closed=1)
 # 1.0.2
 [See Github Milestone](https://github.com/domain-centric/fluent_regex/milestone/6?closed=1)
 # 1.0.1
