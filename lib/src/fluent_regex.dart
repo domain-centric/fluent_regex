@@ -810,6 +810,7 @@ class CharacterSet {
 
   CharacterSet.exclude() : _mode = Scope.exclude;
 
+  /// Same as: 0-9
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
   /// expect(regex.hasMatch('1'),true);
@@ -819,12 +820,25 @@ class CharacterSet {
     return this;
   }
 
+  /// Same as: ^0-9
   /// Example:
   /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
   /// expect(regex.hasMatch('1'),false);
   /// expect(regex.hasMatch('a'),true);
   CharacterSet addNoneDigits() {
     _sets.add('\\D');
+    return this;
+  }
+
+  /// Same as: a-zA-Z0-9_
+  /// Example:
+  /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
+  /// expect(regex.hasMatch('a'),true);
+  /// expect(regex.hasMatch('Z'),true);
+  /// expect(regex.hasMatch('1'),true);
+  /// expect(regex.hasMatch('!'),false);
+  CharacterSet addWordCharacters() {
+    _sets.add('\\w');
     return this;
   }
 

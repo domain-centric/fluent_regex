@@ -478,12 +478,38 @@ void main() {
       });
       test('characterSet(CharacterSet.exclude().addDigits())', () {
         var regex =
-        FluentRegex().characterSet(CharacterSet.exclude().addNoneDigits());
+            FluentRegex().characterSet(CharacterSet.exclude().addNoneDigits());
         expect(regex.hasMatch('1'), true);
         expect(regex.hasMatch('a'), false);
       });
     });
 
+    group('method: addWordCharacters()', () {
+      test('characterSet(CharacterSet().addWordCharacters())', () {
+        var regex =
+            FluentRegex().characterSet(CharacterSet().addWordCharacters());
+        expect(regex.hasMatch('a'), true);
+        expect(regex.hasMatch('Z'), true);
+        expect(regex.hasMatch('1'), true);
+        expect(regex.hasMatch('!'), false);
+      });
+      test(
+          'characterSet(CharacterSet().addWordCharacters(), Quantity.exactly(2))',
+          () {
+        var regex = FluentRegex().characterSet(
+            CharacterSet().addWordCharacters(), Quantity.exactly(2));
+        expect(regex.hasMatch('1'), false);
+        expect(regex.hasMatch('a3'), true);
+        expect(regex.hasMatch('a!'), false);
+        expect(regex.findFirst('b9d'), 'b9');
+      });
+      test('characterSet(CharacterSet.exclude().addWordCharacters())', () {
+        var regex = FluentRegex()
+            .characterSet(CharacterSet.exclude().addWordCharacters());
+        expect(regex.hasMatch('1'), false);
+        expect(regex.hasMatch('!'), true);
+      });
+    });
 
     group('method: addLetters()', () {
       test('characterSet(CharacterSet().addLetters())', () {
