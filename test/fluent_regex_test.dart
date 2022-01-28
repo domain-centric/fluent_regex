@@ -156,6 +156,13 @@ void main() {
         expect(regex.hasMatch('hello\tall'), true);
       });
 
+      test('method: tab()', () {
+        var regex = FluentRegex().tab();
+        expect(regex.hasMatch('hello'), false);
+        expect(regex.hasMatch('\u0009hello'), true);
+        expect(regex.hasMatch('hello\tall'), true);
+      });
+
       test('method: whiteSpace()', () {
         var regex = FluentRegex().whiteSpace();
         expect(regex.hasMatch(' '), true);
@@ -562,6 +569,29 @@ void main() {
         expect(regex.hasMatch('h'), true);
       });
     });
+
+    group('method: addTabs()', () {
+      test('Tabs', () {
+        var regex = FluentRegex().characterSet(CharacterSet().addTabs());
+        expect(regex.hasMatch('hello'), false);
+        expect(regex.hasMatch('\u0009hello'), true);
+        expect(regex.hasMatch('hello\tall'), true);
+      });
+    });
+
+    group('method: addLineBreaks()', () {
+      test('LineBreaks', () {
+        var regex = FluentRegex().characterSet(CharacterSet().addLineBreaks());
+         expect(regex.findFirst('hello\rworld'), '\r');
+         expect(regex.findFirst('hello\nworld'), '\n');
+         expect(regex.findAll('hello\r\nworld').length, 2);
+         expect(regex.findAll('hello\r\rworld').length, 2);
+         expect(regex.hasMatch('hello world'), false);
+      });
+    });
+
+
+
 
     group('method: addLetters()', () {
       test('characterSet(CharacterSet().addLetters())', () {

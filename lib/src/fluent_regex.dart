@@ -316,10 +316,10 @@ class FluentRegex implements RegExp {
   /// expect(regex.findFirst('hello\r\rworld'), '\r\r');
   /// expect(regex.hasMatch('hello world'), false);
   FluentRegex lineBreak([Quantity quantity = const Quantity.oneTime()]) => or([
-        FluentRegex(SpecialCharacter.returnChar + SpecialCharacter.returnChar),
-        FluentRegex(SpecialCharacter.returnChar + SpecialCharacter.newLine),
-        FluentRegex(SpecialCharacter.returnChar),
-        FluentRegex(SpecialCharacter.newLine),
+        FluentRegex(SpecialCharacter.carriageReturn + SpecialCharacter.carriageReturn),
+        FluentRegex(SpecialCharacter.carriageReturn + SpecialCharacter.lineFeed),
+        FluentRegex(SpecialCharacter.carriageReturn),
+        FluentRegex(SpecialCharacter.lineFeed),
       ], quantity);
 
   /// ========================================================================
@@ -804,26 +804,24 @@ extension CaseTypeExtension on CaseType {
 class SpecialCharacter {
   /// Same as: [0-9]
   static final String digit = '\\d';
-
   /// Same as: ^[0-9]
   static final String noneDigit = '\\D';
-
   /// Same as: [a-zA-Z0-9_]
   static final String wordChar = '\\w';
-
   /// Same as: ^[a-zA-Z0-9_]
   static final String noneWordChar = '\\W';
   static final String wordBoundary = '\\b';
   static final String noneWordBoundary = '\\B';
-
   /// Same as: [ \t\n\x0B\f\r]
   static final String whiteSpace = '\\s';
-
   /// Same as: [^ \t\n\x0B\f\r]
   static final String noneWhiteSpace = '\\S';
+  /// Same as: [\u0009]
   static final String tab = '\\t';
-  static final String returnChar = '\\r';
-  static final String newLine = '\\n';
+  /// Same as: [\u000D]
+  static final String carriageReturn = '\\r';
+  /// Same as: [\u000A]
+  static final String lineFeed = '\\n';
 }
 
 /// a [CharacterSet] is a collection of characters that is being searched for.
@@ -912,6 +910,32 @@ class CharacterSet {
     _sets.add(SpecialCharacter.noneWhiteSpace);
     return this;
   }
+
+  /// See [SpecialCharacter.tab]
+  /// Example:
+  /// var regex = FluentRegex().characterSet(CharacterSet().tab());
+  /// expect(regex.hasMatch('hello'), false);
+  /// expect(regex.hasMatch('\u0009hello'), true);
+  /// expect(regex.hasMatch('hello\tall'), true);
+  CharacterSet addTabs() {
+    _sets.add(SpecialCharacter.tab);
+    return this;
+  }
+
+  /// See [SpecialCharacter.carriageReturn] and [SpecialCharacter.lineFeed]
+  /// Example:
+  /// expect(regex.findFirst('hello\rworld'), '\r');
+  /// expect(regex.findFirst('hello\nworld'), '\n');
+  /// expect(regex.findFirst('hello\r\nworld'), '\r\n');
+  /// expect(regex.findFirst('hello\r\rworld'), '\r\r');
+  /// expect(regex.hasMatch('hello world'), false);
+  CharacterSet addLineBreaks() {
+    _sets.add(SpecialCharacter.carriageReturn);
+    _sets.add(SpecialCharacter.lineFeed);
+    return this;
+  }
+
+
 
   /// Example:
   /// var regex = FluentRegex().characterSet(CharacterSet().addLetters());
