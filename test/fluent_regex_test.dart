@@ -487,7 +487,7 @@ void main() {
     group('method: addWordCharacters()', () {
       test('characterSet(CharacterSet().addWordCharacters())', () {
         var regex =
-            FluentRegex().characterSet(CharacterSet().addWordCharacters());
+            FluentRegex().characterSet(CharacterSet().addWordChars());
         expect(regex.hasMatch('a'), true);
         expect(regex.hasMatch('Z'), true);
         expect(regex.hasMatch('1'), true);
@@ -497,7 +497,7 @@ void main() {
           'characterSet(CharacterSet().addWordCharacters(), Quantity.exactly(2))',
           () {
         var regex = FluentRegex().characterSet(
-            CharacterSet().addWordCharacters(), Quantity.exactly(2));
+            CharacterSet().addWordChars(), Quantity.exactly(2));
         expect(regex.hasMatch('1'), false);
         expect(regex.hasMatch('a3'), true);
         expect(regex.hasMatch('a!'), false);
@@ -505,7 +505,7 @@ void main() {
       });
       test('characterSet(CharacterSet.exclude().addWordCharacters())', () {
         var regex = FluentRegex()
-            .characterSet(CharacterSet.exclude().addWordCharacters());
+            .characterSet(CharacterSet.exclude().addWordChars());
         expect(regex.hasMatch('1'), false);
         expect(regex.hasMatch('!'), true);
       });
@@ -514,7 +514,7 @@ void main() {
     group('method: addNoneWordCharacters()', () {
       test('characterSet(CharacterSet().addNoneWordCharacters())', () {
         var regex =
-            FluentRegex().characterSet(CharacterSet().addNoneWordCharacters());
+            FluentRegex().characterSet(CharacterSet().addNoneWordChars());
         expect(regex.hasMatch('a'), false);
         expect(regex.hasMatch('Z'), false);
         expect(regex.hasMatch('1'), false);
@@ -524,7 +524,7 @@ void main() {
           'characterSet(CharacterSet().addNoneWordCharacters(), Quantity.exactly(2))',
           () {
         var regex = FluentRegex().characterSet(
-            CharacterSet().addNoneWordCharacters(), Quantity.exactly(2));
+            CharacterSet().addNoneWordChars(), Quantity.exactly(2));
         expect(regex.hasMatch('!'), false);
         expect(regex.hasMatch('!@'), true);
         expect(regex.hasMatch('a!'), false);
@@ -532,7 +532,7 @@ void main() {
       });
       test('characterSet(CharacterSet.exclude().addNoneWordCharacters())', () {
         var regex = FluentRegex()
-            .characterSet(CharacterSet.exclude().addNoneWordCharacters());
+            .characterSet(CharacterSet.exclude().addNoneWordChars());
         expect(regex.hasMatch('1'), true);
         expect(regex.hasMatch('!'), false);
       });

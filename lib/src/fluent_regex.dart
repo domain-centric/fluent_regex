@@ -837,7 +837,7 @@ class CharacterSet {
   /// expect(regex.hasMatch('Z'),true);
   /// expect(regex.hasMatch('1'),true);
   /// expect(regex.hasMatch('!'),false);
-  CharacterSet addWordCharacters() {
+  CharacterSet addWordChars() {
     _sets.add('\\w');
     return this;
   }
@@ -849,7 +849,7 @@ class CharacterSet {
   /// expect(regex.hasMatch('Z'),false);
   /// expect(regex.hasMatch('1'),false);
   /// expect(regex.hasMatch('!'),true);
-  CharacterSet addNoneWordCharacters() {
+  CharacterSet addNoneWordChars() {
     _sets.add('\\W');
     return this;
   }
