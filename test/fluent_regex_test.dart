@@ -462,6 +462,29 @@ void main() {
       });
     });
 
+    group('method: addNoneDigits()', () {
+      test('characterSet(CharacterSet().addNoneDigits())', () {
+        var regex = FluentRegex().characterSet(CharacterSet().addNoneDigits());
+        expect(regex.hasMatch('1'), false);
+        expect(regex.hasMatch('a'), true);
+      });
+      test('characterSet(CharacterSet().addDigits(), Quantity.exactly(2))', () {
+        var regex = FluentRegex()
+            .characterSet(CharacterSet().addNoneDigits(), Quantity.exactly(2));
+        expect(regex.hasMatch('1'), false);
+        expect(regex.hasMatch('23'), false);
+        expect(regex.hasMatch('a!'), true);
+        expect(regex.findFirst('bCd'), 'bC');
+      });
+      test('characterSet(CharacterSet.exclude().addDigits())', () {
+        var regex =
+        FluentRegex().characterSet(CharacterSet.exclude().addNoneDigits());
+        expect(regex.hasMatch('1'), true);
+        expect(regex.hasMatch('a'), false);
+      });
+    });
+
+
     group('method: addLetters()', () {
       test('characterSet(CharacterSet().addLetters())', () {
         var regex = FluentRegex().characterSet(CharacterSet().addLetters());

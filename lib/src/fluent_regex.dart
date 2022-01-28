@@ -804,8 +804,7 @@ extension CaseTypeExtension on CaseType {
 /// - '2-6' (digits 2 trough 6)
 class CharacterSet {
   final Scope _mode;
-  String _literals = '';
-  final Set<String> _ranges = {};
+  final Set<String> _sets = {};
 
   CharacterSet() : _mode = Scope.include;
 
@@ -816,7 +815,16 @@ class CharacterSet {
   /// expect(regex.hasMatch('1'),true);
   /// expect(regex.hasMatch('a'),false);
   CharacterSet addDigits() {
-    addRange('0', '9');
+    _sets.add('\\d');
+    return this;
+  }
+
+  /// Example:
+  /// var regex=FluentRegex().characterSet(CharacterSet().addDigits());
+  /// expect(regex.hasMatch('1'),false);
+  /// expect(regex.hasMatch('a'),true);
+  CharacterSet addNoneDigits() {
+    _sets.add('\\D');
     return this;
   }
 
@@ -838,7 +846,7 @@ class CharacterSet {
   /// expect(regex.hasMatch('_'), true);
   /// expect(regex.hasMatch('a'), false);
   CharacterSet addLiterals(String literalsToAdd) {
-    _literals += FluentRegex.escape(literalsToAdd);
+    _sets.add(FluentRegex.escape(literalsToAdd));
     return this;
   }
 
@@ -850,13 +858,14 @@ class CharacterSet {
   /// expect(regex.hasMatch('a'), false);
   CharacterSet addRange(String from, String to) {
     String range = '$from-$to';
-    _ranges.add(range);
+    _sets.add(range);
     return this;
   }
 
+
   @override
   String toString() {
-    return '[${_mode.expression}${_ranges.join()}$_literals]';
+    return '[${_mode.expression}${_sets.join()}]';
   }
 }
 
