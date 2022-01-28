@@ -1,3 +1,3 @@
 # Examples
 
-See https://github.com/efficientyboosters/fluent_regex/blob/main/test/fluent_regex_test.dart
+See https://github.com/domain-centric/fluent_regex/blob/main/test/fluent_regex_test.dart
